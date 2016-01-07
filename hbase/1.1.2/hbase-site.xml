@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<!-- Single -->
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+  <property>
+    <name>hbase.rootdir</name>
+    <value>/usr/local/hbase</value>
+  </property>
+</configuration>
