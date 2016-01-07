@@ -1,25 +1,6 @@
-#
-# Dockerfile - Apache Hadoop
-#
-FROM     ubuntu:14.04
-MAINTAINER Yongbok Kim <ruo91@yongbok.net>
+FROM     ckeyer/java:8-jre
 
-# Last Package Update & Install
-RUN apt-get update && apt-get install -y curl supervisor openssh-server net-tools iputils-ping nano
-
-# JDK
-ENV JDK_URL http://download.oracle.com/otn-pub/java/jdk
-ENV JDK_VER 8u65-b17
-ENV JDK_VER2 jdk-8u65
-ENV JAVA_HOME /usr/local/jdk
-ENV PATH $PATH:$JAVA_HOME/bin
-RUN cd $SRC_DIR && curl -LO "$JDK_URL/$JDK_VER/$JDK_VER2-linux-x64.tar.gz" -H 'Cookie: oraclelicense=accept-securebackup-cookie' \
- && tar xzf $JDK_VER2-linux-x64.tar.gz && mv jdk1* $JAVA_HOME && rm -f $JDK_VER2-linux-x64.tar.gz \
- && echo '' >> /etc/profile \
- && echo '# JDK' >> /etc/profile \
- && echo "export JAVA_HOME=$JAVA_HOME" >> /etc/profile \
- && echo 'export PATH="$PATH:$JAVA_HOME/bin"' >> /etc/profile \
- && echo '' >> /etc/profile
+RUN apt-get update && apt-get install -y supervisor openssh-server net-tools iputils-ping nano
 
 # Apache Hadoop
 ENV SRC_DIR /opt
@@ -48,7 +29,6 @@ ADD conf/core-site.xml $HADOOP_PREFIX/etc/hadoop/core-site.xml
 ADD conf/hdfs-site.xml $HADOOP_PREFIX/etc/hadoop/hdfs-site.xml
 ADD conf/yarn-site.xml $HADOOP_PREFIX/etc/hadoop/yarn-site.xml
 ADD conf/mapred-site.xml $HADOOP_PREFIX/etc/hadoop/mapred-site.xml
-RUN sed -i '/^export JAVA_HOME/ s:.*:export JAVA_HOME=/usr/local/jdk:' $HADOOP_PREFIX/etc/hadoop/hadoop-env.sh
 
 # SSH keygen
 RUN cd /root && ssh-keygen -t dsa -P '' -f "/root/.ssh/id_dsa" \
